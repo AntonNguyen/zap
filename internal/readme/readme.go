@@ -36,14 +36,15 @@ import (
 
 var (
 	libraryNameToMarkdownName = map[string]string{
-		"Zap":                   ":zap: zap",
-		"Zap.Sugar":             ":zap: zap (sugared)",
-		"stdlib.Println":        "standard library",
-		"sirupsen/logrus":       "logrus",
-		"go-kit/kit/log":        "go-kit",
-		"inconshreveable/log15": "log15",
-		"apex/log":              "apex/log",
-		"rs/zerolog":            "zerolog",
+		"Zap":                         ":zap: zap",
+		"Zap.Sugar":                   ":zap: zap (sugared)",
+		"stdlib.Println":              "standard library",
+		"sirupsen/logrus":             "logrus",
+		"go-kit/kit/log":              "go-kit",
+		"service-home/pkg/homelogger": "homelogger",
+		"inconshreveable/log15":       "log15",
+		"apex/log":                    "apex/log",
+		"rs/zerolog":                  "zerolog",
 	}
 )
 
@@ -183,7 +184,7 @@ func findUniqueSubstring(input []string, substring string) (string, error) {
 
 func getBenchmarkOutput(benchmarkName string) ([]string, error) {
 	cmd := exec.Command("go", "test", fmt.Sprintf("-bench=%s", benchmarkName), "-benchmem")
-	cmd.Dir = "benchmarks"
+	cmd.Dir = "/Users/anton.n/projects/zap/benchmarks"
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return nil, fmt.Errorf("error running 'go test -bench=%q': %v\n%s", benchmarkName, err, string(output))

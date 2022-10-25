@@ -54,7 +54,7 @@ and make many small allocations. Put differently, using `encoding/json` and
 Zap takes a different approach. It includes a reflection-free, zero-allocation
 JSON encoder, and the base `Logger` strives to avoid serialization overhead
 and allocations wherever possible. By building the high-level `SugaredLogger`
-on that foundation, zap lets users _choose_ when they need to count every
+on that foundation, zap lets users *choose* when they need to count every
 allocation and when they'd prefer a more familiar, loosely typed API.
 
 As measured by its own [benchmarking suite][], not only is zap more performant
@@ -64,40 +64,43 @@ id="anchor-versions">[1](#footnote-versions)</sup>
 
 Log a message and 10 fields:
 
-| Package             |    Time     | Time % to zap | Objects Allocated |
-| :------------------ | :---------: | :-----------: | :---------------: |
-| :zap: zap           | 2900 ns/op  |      +0%      |    5 allocs/op    |
-| :zap: zap (sugared) | 3475 ns/op  |     +20%      |   10 allocs/op    |
-| zerolog             | 10639 ns/op |     +267%     |   32 allocs/op    |
-| go-kit              | 14434 ns/op |     +398%     |   59 allocs/op    |
-| logrus              | 17104 ns/op |     +490%     |   81 allocs/op    |
-| apex/log            | 32424 ns/op |    +1018%     |   66 allocs/op    |
-| log15               | 33579 ns/op |    +1058%     |   76 allocs/op    |
+| Package | Time | Time % to zap | Objects Allocated |
+| :------ | :--: | :-----------: | :---------------: |
+| :zap: zap | 732 ns/op | +0% | 5 allocs/op
+| :zap: zap (sugared) | 1093 ns/op | +49% | 10 allocs/op
+| zerolog | 440 ns/op | -40% | 1 allocs/op
+| go-kit | 2930 ns/op | +300% | 57 allocs/op
+| logrus | 4953 ns/op | +577% | 79 allocs/op
+| homelogger | 5460 ns/op | +646% | 88 allocs/op
+| apex/log | 14537 ns/op | +1886% | 63 allocs/op
+| log15 | 15298 ns/op | +1990% | 74 allocs/op
 
 Log a message with a logger that already has 10 fields of context:
 
-| Package             |    Time     | Time % to zap | Objects Allocated |
-| :------------------ | :---------: | :-----------: | :---------------: |
-| :zap: zap           |  373 ns/op  |      +0%      |    0 allocs/op    |
-| :zap: zap (sugared) |  452 ns/op  |     +21%      |    1 allocs/op    |
-| zerolog             |  288 ns/op  |     -23%      |    0 allocs/op    |
-| go-kit              | 11785 ns/op |    +3060%     |   58 allocs/op    |
-| logrus              | 19629 ns/op |    +5162%     |   70 allocs/op    |
-| log15               | 21866 ns/op |    +5762%     |   72 allocs/op    |
-| apex/log            | 30890 ns/op |    +8182%     |   55 allocs/op    |
+| Package | Time | Time % to zap | Objects Allocated |
+| :------ | :--: | :-----------: | :---------------: |
+| :zap: zap | 64 ns/op | +0% | 0 allocs/op
+| :zap: zap (sugared) | 97 ns/op | +52% | 1 allocs/op
+| zerolog | 39 ns/op | -39% | 0 allocs/op
+| homelogger | 1562 ns/op | +2341% | 36 allocs/op
+| go-kit | 3227 ns/op | +4942% | 56 allocs/op
+| logrus | 4143 ns/op | +6373% | 68 allocs/op
+| log15 | 10027 ns/op | +15567% | 70 allocs/op
+| apex/log | 13329 ns/op | +20727% | 53 allocs/op
 
 Log a static string, without any context or `printf`-style templating:
 
-| Package             |    Time    | Time % to zap | Objects Allocated |
-| :------------------ | :--------: | :-----------: | :---------------: |
-| :zap: zap           | 381 ns/op  |      +0%      |    0 allocs/op    |
-| :zap: zap (sugared) | 410 ns/op  |      +8%      |    1 allocs/op    |
-| zerolog             | 369 ns/op  |      -3%      |    0 allocs/op    |
-| standard library    | 385 ns/op  |      +1%      |    2 allocs/op    |
-| go-kit              | 606 ns/op  |     +59%      |   11 allocs/op    |
-| logrus              | 1730 ns/op |     +354%     |   25 allocs/op    |
-| apex/log            | 1998 ns/op |     +424%     |    7 allocs/op    |
-| log15               | 4546 ns/op |    +1093%     |   22 allocs/op    |
+| Package | Time | Time % to zap | Objects Allocated |
+| :------ | :--: | :-----------: | :---------------: |
+| :zap: zap | 66 ns/op | +0% | 0 allocs/op
+| :zap: zap (sugared) | 86 ns/op | +30% | 1 allocs/op
+| standard library | 8 ns/op | -88% | 1 allocs/op
+| zerolog | 31 ns/op | -53% | 0 allocs/op
+| go-kit | 254 ns/op | +285% | 9 allocs/op
+| apex/log | 989 ns/op | +1398% | 6 allocs/op
+| logrus | 1022 ns/op | +1448% | 23 allocs/op
+| homelogger | 1569 ns/op | +2277% | 36 allocs/op
+| log15 | 2290 ns/op | +3370% | 20 allocs/op
 
 ## Development Status: Stable
 

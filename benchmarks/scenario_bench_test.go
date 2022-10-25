@@ -297,6 +297,15 @@ func BenchmarkWithoutFields(b *testing.B) {
 			}
 		})
 	})
+	b.Run("service-home/pkg/homelogger", func(b *testing.B) {
+		logger := newHomeLog()
+		b.ResetTimer()
+		b.RunParallel(func(pb *testing.PB) {
+			for pb.Next() {
+				logger.Info(getMessage(0))
+			}
+		})
+	})
 	b.Run("inconshreveable/log15", func(b *testing.B) {
 		logger := newLog15()
 		b.ResetTimer()
@@ -435,6 +444,15 @@ func BenchmarkAccumulatedContext(b *testing.B) {
 			}
 		})
 	})
+	b.Run("service-home/pkg/homelogger", func(b *testing.B) {
+		logger := newHomeLog(fakeSugarFields()...)
+		b.ResetTimer()
+		b.RunParallel(func(pb *testing.PB) {
+			for pb.Next() {
+				logger.Info(getMessage(0))
+			}
+		})
+	})
 	b.Run("inconshreveable/log15", func(b *testing.B) {
 		logger := newLog15().New(fakeSugarFields())
 		b.ResetTimer()
@@ -543,6 +561,15 @@ func BenchmarkAddingFields(b *testing.B) {
 		b.RunParallel(func(pb *testing.PB) {
 			for pb.Next() {
 				logger.Log(fakeSugarFields()...)
+			}
+		})
+	})
+	b.Run("service-home/pkg/homelogger", func(b *testing.B) {
+		logger := newHomeLog(fakeSugarFields()...)
+		b.ResetTimer()
+		b.RunParallel(func(pb *testing.PB) {
+			for pb.Next() {
+				logger.Info(getMessage(0), fakeSugarFields()...)
 			}
 		})
 	})
