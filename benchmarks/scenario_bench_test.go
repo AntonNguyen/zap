@@ -21,6 +21,7 @@
 package benchmarks
 
 import (
+	"context"
 	"io"
 	"log"
 	"testing"
@@ -445,7 +446,8 @@ func BenchmarkAccumulatedContext(b *testing.B) {
 		})
 	})
 	b.Run("service-home/pkg/homelogger", func(b *testing.B) {
-		logger := newHomeLog(fakeSugarFields()...)
+		logger := newHomeLog()
+		logger = logger.WithContext(context.Background(), fakeSugarFields()...)
 		b.ResetTimer()
 		b.RunParallel(func(pb *testing.PB) {
 			for pb.Next() {
@@ -565,7 +567,8 @@ func BenchmarkAddingFields(b *testing.B) {
 		})
 	})
 	b.Run("service-home/pkg/homelogger", func(b *testing.B) {
-		logger := newHomeLog(fakeSugarFields()...)
+		logger := newHomeLog()
+		logger = logger.WithContext(context.Background())
 		b.ResetTimer()
 		b.RunParallel(func(pb *testing.PB) {
 			for pb.Next() {
